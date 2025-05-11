@@ -1,4 +1,4 @@
-Im = double(imread('lab7files/hus.tif'));
+Im = double(imread('hus.tif'));
 
 sobelx = [1 0 -1; 2 0 -2; 1 0 -1] /8;
 Imsobelx = conv2(Im, sobelx, 'same');
@@ -9,7 +9,7 @@ maxv = max(Imgrad(:));
 binvect = [0:maxv/100:maxv];
 histo = hist(Imgrad(:), binvect);
 
-T=22;
+T=15;
 ImgradT = Imgrad>T;
 Imskel = bwmorph(ImgradT, 'skel', inf);
 
@@ -24,22 +24,13 @@ axis tight; title('histogram')
 subplot(2,2,4), imagesc(ImgradT)
 axis image; axis off; title('threshholded'); colorbar;
 
-
-
 figure(2)
 colormap(gray(256))
 subplot(1,1,1), imagesc(Imskel)
 axis image; axis off; title('skeleton'); colorbar;
 
-[cannyim1, T_aut] = edge(Im, 'canny');
-figure(3)
-subplot(1,1,1), imagesc(cannyim1)
-title(T_aut)
 
-T = 0.25
-cannyim2 = edge(Im, 'canny', [0.4*T T])
 
-figure(4)
-subplot(1,1,1), imagesc(cannyim2)
-title(T)
+
+
 
