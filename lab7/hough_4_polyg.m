@@ -9,11 +9,11 @@ title("Image");
 
 % Canny edge lines
 % ========================
-T = 0.35;
+T = 0.40;
 [cannyim1, T_aut] = edge(im, "canny", [0.4*T T]);
 subplot(2,2,2), imagesc(cannyim1);
 axis image; axis xy; colorbar;
-title("Image");
+title("Canny");
 
 % Call the Hough transform
 % ========================
@@ -32,32 +32,19 @@ plot(x,y,"s","color","red"), hold off
 
 % Inverse Hough transform give Hough lines
 % ========================================
-into_hough = ones(size(im));
-%into_hough = imdilate(into_hough,)
 
-figure(2);
-for i = 1:10
-    for j = 1:10
-        lines = houghlines(into_hough,T,R,P,"FillGap",i*20,"MinLength",j*4);
-        subplot(10,10,1+(i-1)*10 + mod(j,10)), imagesc(im), hold on
-        for k = 1:length(lines)
-            xy = [lines(k).point1; lines(k).point2];
-            plot(xy(:,1),xy(:,2),"LineWidth",2,"Color","green");
-        end
-        hold off
-    end
-end
+% Small dilation to make sure lines connect
+se = strel('disk',2);
+into_hough = imdilate(cannyim1,se)
         
-
-
-%lines = houghlines(into_hough,T,R,P,"FillGap",500,"MinLength",7);
+lines = houghlines(into_hough,T,R,P,"FillGap",40,"MinLength",40);
 % Overlay Hough lines on image
 % ============================
-%subplot(2,2,4), imagesc(im), hold on
-%title("Result"),
-%axis image; axis xy; colorbar;
-%for k = 1:length(lines)
-%    xy = [lines(k).point1; lines(k).point2];
-%    plot(xy(:,1),xy(:,2),"LineWidth",2,"Color","green");
-%end
+subplot(2,2,4), imagesc(im), hold on
+title("Result"),
+axis image; axis xy; colorbar;
+for k = 1:length(lines)
+    xy = [lines(k).point1; lines(k).point2];
+    plot(xy(:,1),xy(:,2),"LineWidth",2,"Color","green");
+end
 hold off
