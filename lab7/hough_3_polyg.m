@@ -9,7 +9,8 @@ title("Image");
 
 % Canny edge lines
 % ========================
-[cannyim1, T_aut] = edge(im, "canny", [0.4*0.25 0.25]);
+T = 0.45
+[cannyim1, T_aut] = edge(im, "canny", [0.4*T T]);
 subplot(2,2,2), imagesc(cannyim1);
 axis image; axis xy; colorbar;
 title("Image");
@@ -31,13 +32,14 @@ plot(x,y,"s","color","red"), hold off
 
 % Inverse Hough transform give Hough lines
 % ========================================
-lines = houghlines(ones(size(im)),T,R,P);
+lines = houghlines(ones(size(cannyim1)),T,R,P);
 % Overlay Hough lines on image
 % ============================
 subplot(2,2,4), imagesc(im), hold on
 title("Result"),
 axis image; axis xy; colorbar;
 for k = 1:length(lines)
+    disp(lines(k))
     xy = [lines(k).point1; lines(k).point2];
     plot(xy(:,1),xy(:,2),"LineWidth",2,"Color","green");
 end
